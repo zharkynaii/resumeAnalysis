@@ -1,6 +1,3 @@
-# Developed by dnoobnerd [https://dnoobnerd.netlify.app]    Made with Streamlit
-
-
 ###### Packages Used ######
 import streamlit as st # core package used in this project
 import pandas as pd
@@ -18,11 +15,11 @@ import plotly.graph_objects as go
 from geopy.geocoders import Nominatim
 # libraries used to parse the pdf files
 from pyresparser import ResumeParser
-from pdfminer3.layout import LAParams, LTTextBox
-from pdfminer3.pdfpage import PDFPage
-from pdfminer3.pdfinterp import PDFResourceManager
-from pdfminer3.pdfinterp import PDFPageInterpreter
-from pdfminer3.converter import TextConverter
+from pdfminer.layout import LAParams, LTTextBox
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfinterp import PDFResourceManager
+from pdfminer.pdfinterp import PDFPageInterpreter
+from pdfminer.converter import TextConverter
 from streamlit_tags import st_tags
 from PIL import Image
 # pre stored data for prediction purposes
@@ -131,28 +128,13 @@ st.set_page_config(
 def run():
     
     # (Logo, Heading, Sidebar etc)
-    img = Image.open('./Logo/RESUM.png')
+    img = Image.open('./Logo/RESUM.jpg')
     st.image(img)
     st.sidebar.markdown("# Choose Something...")
-    activities = ["User", "Feedback", "About", "Admin"]
+    activities = ["User", "Admin"]
     choice = st.sidebar.selectbox("Choose among the given options:", activities)
-    link = '<b>Built with 🤍 by <a href="https://dnoobnerd.netlify.app/" style="text-decoration: none; color: #021659;">Deepak Padhi</a></b>' 
-    st.sidebar.markdown(link, unsafe_allow_html=True)
-    st.sidebar.markdown('''
-        <!-- site visitors -->
-
-        <div id="sfct2xghr8ak6lfqt3kgru233378jya38dy" hidden></div>
-
-        <noscript>
-            <a href="https://www.freecounterstat.com" title="hit counter">
-                <img src="https://counter9.stat.ovh/private/freecounterstat.php?c=t2xghr8ak6lfqt3kgru233378jya38dy" border="0" title="hit counter" alt="hit counter"> -->
-            </a>
-        </noscript>
+    st.sidebar.markdown("Welcome 🤍", unsafe_allow_html=True)
     
-        <p>Visitors <img src="https://counter9.stat.ovh/private/freecounterstat.php?c=t2xghr8ak6lfqt3kgru233378jya38dy" title="Free Counter" Alt="web counter" width="60px"  border="0" /></p>
-    
-    ''', unsafe_allow_html=True)
-
     ###### Creating Database and Table ######
 
 
@@ -224,14 +206,9 @@ def run():
         g = geocoder.ip('me')
         latlong = g.latlng
         geolocator = Nominatim(user_agent="http")
-        location = geolocator.reverse(latlong, language='en')
-        address = location.raw['address']
-        cityy = address.get('city', '')
-        statee = address.get('state', '')
-        countryy = address.get('country', '')  
-        city = cityy
-        state = statee
-        country = countryy
+        city = "Unknown"
+        state = "Unknown"
+        country = "Unknown"
 
 
         # Upload Resume
@@ -240,7 +217,7 @@ def run():
         ## file upload in pdf format
         pdf_file = st.file_uploader("Choose your Resume", type=["pdf"])
         if pdf_file is not None:
-            with st.spinner('Hang On While We Cook Magic For You...'):
+            with st.spinner(''):
                 time.sleep(4)
         
             ### saving the uploaded resume to folder
@@ -258,9 +235,9 @@ def run():
                 resume_text = pdf_reader(save_image_path)
 
                 ## Showing Analyzed data from (resume_data)
-                st.header("**Resume Analysis 🤘**")
+                st.header("**Resume Analysis**")
                 st.success("Hello "+ resume_data['name'])
-                st.subheader("**Your Basic info 👀**")
+                st.subheader("**Your Basic info**")
                 try:
                     st.text('Name: '+resume_data['name'])
                     st.text('Email: ' + resume_data['email'])
@@ -311,7 +288,7 @@ def run():
 
 
                 ## Skills Analyzing and Recommendation
-                st.subheader("**Skills Recommendation 💡**")
+                st.subheader("**Skills Recommendation**")
                 
                 ### Current Analyzed Skills
                 keywords = st_tags(label='### Your Current Skills',
@@ -412,7 +389,7 @@ def run():
 
 
                 ## Resume Scorer & Resume Writing Tips
-                st.subheader("**Resume Tips & Ideas 🥂**")
+                st.subheader("**Resume Tips & Ideas**")
                 resume_score = 0
                 
                 ### Predicting Whether these key points are added to the resume
@@ -428,11 +405,11 @@ def run():
                 else:
                     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Education. It will give Your Qualification level to the recruiter</h4>''',unsafe_allow_html=True)
 
-                if 'EXPERIENCE' in resume_text:
-                    resume_score = resume_score + 16
+                if 'EXPERIENCE' or 'EMPLOYMENT HISTORY' or 'employment history'  in resume_text:
+                    resume_score = resume_score + 21
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Experience</h4>''',unsafe_allow_html=True)
                 elif 'Experience' in resume_text:
-                    resume_score = resume_score + 16
+                    resume_score = resume_score + 21
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Experience</h4>''',unsafe_allow_html=True)
                 else:
                     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Experience. It will help you to stand out from crowd</h4>''',unsafe_allow_html=True)
@@ -453,43 +430,43 @@ def run():
                     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Internships. It will help you to stand out from crowd</h4>''',unsafe_allow_html=True)
 
                 if 'SKILLS'  in resume_text:
-                    resume_score = resume_score + 7
+                    resume_score = resume_score + 12
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Skills</h4>''',unsafe_allow_html=True)
                 elif 'SKILL'  in resume_text:
-                    resume_score = resume_score + 7
+                    resume_score = resume_score + 12
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Skills</h4>''',unsafe_allow_html=True)
                 elif 'Skills'  in resume_text:
-                    resume_score = resume_score + 7
+                    resume_score = resume_score + 12
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Skills</h4>''',unsafe_allow_html=True)
                 elif 'Skill'  in resume_text:
-                    resume_score = resume_score + 7
+                    resume_score = resume_score + 12
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Skills</h4>''',unsafe_allow_html=True)
                 else:
                     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Skills. It will help you a lot</h4>''',unsafe_allow_html=True)
 
-                if 'HOBBIES' in resume_text:
-                    resume_score = resume_score + 4
-                    st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Hobbies</h4>''',unsafe_allow_html=True)
-                elif 'Hobbies' in resume_text:
-                    resume_score = resume_score + 4
-                    st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Hobbies</h4>''',unsafe_allow_html=True)
-                else:
-                    st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Hobbies. It will show your personality to the Recruiters and give the assurance that you are fit for this role or not.</h4>''',unsafe_allow_html=True)
+                # if 'HOBBIES' in resume_text:
+                #     resume_score = resume_score + 4
+                #     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Hobbies</h4>''',unsafe_allow_html=True)
+                # elif 'Hobbies' in resume_text:
+                #     resume_score = resume_score + 4
+                #     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Hobbies</h4>''',unsafe_allow_html=True)
+                # else:
+                #     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Hobbies. It will show your personality to the Recruiters and give the assurance that you are fit for this role or not.</h4>''',unsafe_allow_html=True)
 
-                if 'INTERESTS'in resume_text:
-                    resume_score = resume_score + 5
-                    st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Interest</h4>''',unsafe_allow_html=True)
-                elif 'Interests'in resume_text:
-                    resume_score = resume_score + 5
-                    st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Interest</h4>''',unsafe_allow_html=True)
-                else:
-                    st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Interest. It will show your interest other that job.</h4>''',unsafe_allow_html=True)
+                # if 'INTERESTS'in resume_text:
+                #     resume_score = resume_score + 5
+                #     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Interest</h4>''',unsafe_allow_html=True)
+                # elif 'Interests'in resume_text:
+                #     resume_score = resume_score + 5
+                #     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Interest</h4>''',unsafe_allow_html=True)
+                # else:
+                #     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Interest. It will show your interest other that job.</h4>''',unsafe_allow_html=True)
 
                 if 'ACHIEVEMENTS' in resume_text:
-                    resume_score = resume_score + 13
+                    resume_score = resume_score + 8
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Achievements </h4>''',unsafe_allow_html=True)
                 elif 'Achievements' in resume_text:
-                    resume_score = resume_score + 13
+                    resume_score = resume_score + 8
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Achievements </h4>''',unsafe_allow_html=True)
                 else:
                     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Achievements. It will show that you are capable for the required position.</h4>''',unsafe_allow_html=True)
@@ -507,21 +484,21 @@ def run():
                     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Certifications. It will show that you have done some specialization for the required position.</h4>''',unsafe_allow_html=True)
 
                 if 'PROJECTS' in resume_text:
-                    resume_score = resume_score + 19
+                    resume_score = resume_score + 23
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Projects</h4>''',unsafe_allow_html=True)
                 elif 'PROJECT' in resume_text:
-                    resume_score = resume_score + 19
+                    resume_score = resume_score + 23
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Projects</h4>''',unsafe_allow_html=True)
                 elif 'Projects' in resume_text:
-                    resume_score = resume_score + 19
+                    resume_score = resume_score + 23
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Projects</h4>''',unsafe_allow_html=True)
                 elif 'Project' in resume_text:
-                    resume_score = resume_score + 19
+                    resume_score = resume_score + 23
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Projects</h4>''',unsafe_allow_html=True)
                 else:
                     st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add Projects. It will show that you have done work related the required position or not.</h4>''',unsafe_allow_html=True)
 
-                st.subheader("**Resume Score 📝**")
+                st.subheader("**Resume Score**")
                 
                 st.markdown(
                     """
@@ -559,12 +536,12 @@ def run():
                 insert_data(str(sec_token), str(ip_add), (host_name), (dev_user), (os_name_ver), (latlong), (city), (state), (country), (act_name), (act_mail), (act_mob), resume_data['name'], resume_data['email'], str(resume_score), timestamp, str(resume_data['no_of_pages']), reco_field, cand_level, str(resume_data['skills']), str(recommended_skills), str(rec_course), pdf_name)
 
                 ## Recommending Resume Writing Video
-                st.header("**Bonus Video for Resume Writing Tips💡**")
+                st.header("**Bonus Video for Resume Writing Tips**")
                 resume_vid = random.choice(resume_videos)
                 st.video(resume_vid)
 
                 ## Recommending Interview Preparation Video
-                st.header("**Bonus Video for Interview Tips💡**")
+                st.header("**Bonus Video for Interview Tips**")
                 interview_vid = random.choice(interview_videos)
                 st.video(interview_vid)
 
@@ -575,88 +552,12 @@ def run():
                 st.error('Something went wrong..')                
 
 
-    ###### CODE FOR FEEDBACK SIDE ######
-    elif choice == 'Feedback':   
-        
-        # timestamp 
-        ts = time.time()
-        cur_date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
-        cur_time = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
-        timestamp = str(cur_date+'_'+cur_time)
-
-        # Feedback Form
-        with st.form("my_form"):
-            st.write("Feedback form")            
-            feed_name = st.text_input('Name')
-            feed_email = st.text_input('Email')
-            feed_score = st.slider('Rate Us From 1 - 5', 1, 5)
-            comments = st.text_input('Comments')
-            Timestamp = timestamp        
-            submitted = st.form_submit_button("Submit")
-            if submitted:
-                ## Calling insertf_data to add dat into user feedback
-                insertf_data(feed_name,feed_email,feed_score,comments,Timestamp)    
-                ## Success Message 
-                st.success("Thanks! Your Feedback was recorded.") 
-                ## On Successful Submit
-                st.balloons()    
-
-
-        # query to fetch data from user feedback table
-        query = 'select * from user_feedback'        
-        plotfeed_data = pd.read_sql(query, connection)                        
-
-
-        # fetching feed_score from the query and getting the unique values and total value count 
-        labels = plotfeed_data.feed_score.unique()
-        values = plotfeed_data.feed_score.value_counts()
-
-
-        # plotting pie chart for user ratings
-        st.subheader("**Past User Rating's**")
-        fig = px.pie(values=values, names=labels, title="Chart of User Rating Score From 1 - 5", color_discrete_sequence=px.colors.sequential.Aggrnyl)
-        st.plotly_chart(fig)
-
-
-        #  Fetching Comment History
-        cursor.execute('select feed_name, comments from user_feedback')
-        plfeed_cmt_data = cursor.fetchall()
-
-        st.subheader("**User Comment's**")
-        dff = pd.DataFrame(plfeed_cmt_data, columns=['User', 'Comment'])
-        st.dataframe(dff, width=1000)
+   
+    
 
     
-    ###### CODE FOR ABOUT PAGE ######
-    elif choice == 'About':   
+   
 
-        st.subheader("**About The Tool - AI RESUME ANALYZER**")
-
-        st.markdown('''
-
-        <p align='justify'>
-            A tool which parses information from a resume using natural language processing and finds the keywords, cluster them onto sectors based on their keywords. And lastly show recommendations, predictions, analytics to the applicant based on keyword matching.
-        </p>
-
-        <p align="justify">
-            <b>How to use it: -</b> <br/><br/>
-            <b>User -</b> <br/>
-            In the Side Bar choose yourself as user and fill the required fields and upload your resume in pdf format.<br/>
-            Just sit back and relax our tool will do the magic on it's own.<br/><br/>
-            <b>Feedback -</b> <br/>
-            A place where user can suggest some feedback about the tool.<br/><br/>
-            <b>Admin -</b> <br/>
-            For login use <b>admin</b> as username and <b>admin@resume-analyzer</b> as password.<br/>
-            It will load all the required stuffs and perform analysis.
-        </p><br/><br/>
-
-        <p align="justify">
-            Built with 🤍 by 
-            <a href="https://dnoobnerd.netlify.app/" style="text-decoration: none; color: grey;">Deepak Padhi</a> through 
-            <a href="https://www.linkedin.com/in/mrbriit/" style="text-decoration: none; color: grey;">Dr Bright --(Data Scientist)</a>
-        </p>
-
-        ''',unsafe_allow_html=True)  
 
 
     ###### CODE FOR ADMIN SIDE (ADMIN) ######
@@ -670,7 +571,7 @@ def run():
         if st.button('Login'):
             
             ## Credentials 
-            if ad_user == 'admin' and ad_password == 'admin@resume-analyzer':
+            if ad_user == 'admin' and ad_password == 'admin123':
                 
                 ### Fetch miscellaneous data from user_data(table) and convert it into dataframe
                 cursor.execute('''SELECT ID, ip_add, resume_score, convert(Predicted_Field using utf8), convert(User_level using utf8), city, state, country from user_data''')
@@ -679,7 +580,7 @@ def run():
                 
                 ### Total Users Count with a Welcome Message
                 values = plot_data.Idt.count()
-                st.success("Welcome Deepak ! Total %d " % values + " User's Have Used Our Tool : )")                
+                st.success("Welcome Admin!")                
                 
                 ### Fetch user data from user_data(table) and convert it into dataframe
                 cursor.execute('''SELECT ID, sec_token, ip_add, act_name, act_mail, act_mob, convert(Predicted_Field using utf8), Timestamp, Name, Email_ID, resume_score, Page_no, pdf_name, convert(User_level using utf8), convert(Actual_skills using utf8), convert(Recommended_skills using utf8), convert(Recommended_courses using utf8), city, state, country, latlong, os_name_ver, host_name, dev_user from user_data''')
@@ -701,9 +602,9 @@ def run():
                 cursor.execute('''SELECT * from user_feedback''')
                 data = cursor.fetchall()
 
-                st.header("**User's Feedback Data**")
-                df = pd.DataFrame(data, columns=['ID', 'Name', 'Email', 'Feedback Score', 'Comments', 'Timestamp'])
-                st.dataframe(df)
+                # st.header("**User's Feedback Data**")
+                # df = pd.DataFrame(data, columns=['ID', 'Name', 'Email', 'Feedback Score', 'Comments', 'Timestamp'])
+                # st.dataframe(df)
 
                 ### query to fetch data from user_feedback(table)
                 query = 'select * from user_feedback'
@@ -715,10 +616,7 @@ def run():
                 labels = plotfeed_data.feed_score.unique()
                 values = plotfeed_data.feed_score.value_counts()
                 
-                # Pie chart for user ratings
-                st.subheader("**User Rating's**")
-                fig = px.pie(values=values, names=labels, title="Chart of User Rating Score From 1 - 5 🤗", color_discrete_sequence=px.colors.sequential.Aggrnyl)
-                st.plotly_chart(fig)
+               
 
                 # fetching Predicted_Field from the query and getting the unique values and total value count                 
                 labels = plot_data.Predicted_Field.unique()
@@ -726,16 +624,39 @@ def run():
 
                 # Pie chart for predicted field recommendations
                 st.subheader("**Pie-Chart for Predicted Field Recommendation**")
-                fig = px.pie(df, values=values, names=labels, title='Predicted Field according to the Skills 👽', color_discrete_sequence=px.colors.sequential.Aggrnyl_r)
+
+# Стало:
+                field_counts = plot_data['Predicted_Field'].value_counts().reset_index()
+                field_counts.columns = ['Field', 'Count']
+                # fig = px.pie(field_counts, 
+                #             values='Count', 
+                #             names='Field',
+                #             title='Predicted Field according to the Skills',
+                #             color_discrete_sequence=px.colors.sequential.Aggrnyl_r)
+                # st.plotly_chart(fig)
+                fig = px.line(field_counts,
+                    x='Field',
+                    y='Count',
+                    title='Predicted Fields According to Skills (Line Plot)',
+                    markers=True)
+
                 st.plotly_chart(fig)
 
                 # fetching User_Level from the query and getting the unique values and total value count                 
                 labels = plot_data.User_Level.unique()
                 values = plot_data.User_Level.value_counts()
 
-                # Pie chart for User's👨‍💻 Experienced Level
+                # Pie chart for User's Experienced Level
                 st.subheader("**Pie-Chart for User's Experienced Level**")
-                fig = px.pie(df, values=values, names=labels, title="Pie-Chart 📈 for User's 👨‍💻 Experienced Level", color_discrete_sequence=px.colors.sequential.RdBu)
+                # Было:
+                # Стало:
+                level_counts = plot_data['User_Level'].value_counts().reset_index()
+                level_counts.columns = ['Level', 'Count']
+                fig = px.pie(level_counts,
+                            values='Count',
+                            names='Level',
+                            title="Pie-Chart for User's Experienced Level",
+                            color_discrete_sequence=px.colors.sequential.RdBu)
                 st.plotly_chart(fig)
 
                 # fetching resume_score from the query and getting the unique values and total value count                 
@@ -744,44 +665,64 @@ def run():
 
                 # Pie chart for Resume Score
                 st.subheader("**Pie-Chart for Resume Score**")
-                fig = px.pie(df, values=values, names=labels, title='From 1 to 100 💯', color_discrete_sequence=px.colors.sequential.Agsunset)
+                score_counts = plot_data['resume_score'].value_counts().reset_index()
+                score_counts.columns = ['Score', 'Count']
+                fig = px.histogram(score_counts,
+                    x='Score',
+                    y='Count',
+                    title='Resume Scores Distribution',
+                    color='Score',
+                    color_discrete_sequence=px.colors.sequential.Agsunset)
                 st.plotly_chart(fig)
+                # fig = px.pie(score_counts,
+                #             values='Count',
+                #             names='Score',
+                #             title='From 1 to 100',
+                #             color_discrete_sequence=px.colors.sequential.Agsunset)
+                # st.plotly_chart(fig)
 
                 # fetching IP_add from the query and getting the unique values and total value count 
-                labels = plot_data.IP_add.unique()
-                values = plot_data.IP_add.value_counts()
+                # labels = plot_data.IP_add.unique()
+                # values = plot_data.IP_add.value_counts()
 
-                # Pie chart for Users
-                st.subheader("**Pie-Chart for Users App Used Count**")
-                fig = px.pie(df, values=values, names=labels, title='Usage Based On IP Address 👥', color_discrete_sequence=px.colors.sequential.matter_r)
-                st.plotly_chart(fig)
+                # # Pie chart for Users
+                # st.subheader("**Pie-Chart for Users App Used Count**")
+                # ip_counts = plot_data['IP_add'].value_counts().reset_index()
+                # ip_counts.columns = ['IP', 'Count']
+                # fig = px.pie(ip_counts,
+                #             values='Count',
+                #             names='IP',
+                #             title='Usage Based On IP Address 👥',
+                #             color_discrete_sequence=px.colors.sequential.matter_r)
+                # # fig = px.pie(df, values=values, names=labels, title='Usage Based On IP Address 👥', color_discrete_sequence=px.colors.sequential.matter_r)
+                # st.plotly_chart(fig)
 
                 # fetching City from the query and getting the unique values and total value count 
-                labels = plot_data.City.unique()
-                values = plot_data.City.value_counts()
+                # labels = plot_data.City.unique()
+                # values = plot_data.City.value_counts()
 
                 # Pie chart for City
-                st.subheader("**Pie-Chart for City**")
-                fig = px.pie(df, values=values, names=labels, title='Usage Based On City 🌆', color_discrete_sequence=px.colors.sequential.Jet)
-                st.plotly_chart(fig)
+                # st.subheader("**Pie-Chart for City**")
+                # fig = px.pie(df, values=values, names=labels, title='Usage Based On City 🌆', color_discrete_sequence=px.colors.sequential.Jet)
+                # st.plotly_chart(fig)
 
-                # fetching State from the query and getting the unique values and total value count 
-                labels = plot_data.State.unique()
-                values = plot_data.State.value_counts()
+                # # fetching State from the query and getting the unique values and total value count 
+                # labels = plot_data.State.unique()
+                # values = plot_data.State.value_counts()
 
-                # Pie chart for State
-                st.subheader("**Pie-Chart for State**")
-                fig = px.pie(df, values=values, names=labels, title='Usage Based on State 🚉', color_discrete_sequence=px.colors.sequential.PuBu_r)
-                st.plotly_chart(fig)
+                # # Pie chart for State
+                # st.subheader("**Pie-Chart for State**")
+                # fig = px.pie(df, values=values, names=labels, title='Usage Based on State 🚉', color_discrete_sequence=px.colors.sequential.PuBu_r)
+                # st.plotly_chart(fig)
 
-                # fetching Country from the query and getting the unique values and total value count 
-                labels = plot_data.Country.unique()
-                values = plot_data.Country.value_counts()
+                # # fetching Country from the query and getting the unique values and total value count 
+                # labels = plot_data.Country.unique()
+                # values = plot_data.Country.value_counts()
 
-                # Pie chart for Country
-                st.subheader("**Pie-Chart for Country**")
-                fig = px.pie(df, values=values, names=labels, title='Usage Based on Country 🌏', color_discrete_sequence=px.colors.sequential.Purpor_r)
-                st.plotly_chart(fig)
+                # # Pie chart for Country
+                # st.subheader("**Pie-Chart for Country**")
+                # fig = px.pie(df, values=values, names=labels, title='Usage Based on Country 🌏', color_discrete_sequence=px.colors.sequential.Purpor_r)
+                # st.plotly_chart(fig)
 
             ## For Wrong Credentials
             else:
