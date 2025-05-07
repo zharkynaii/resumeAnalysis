@@ -584,15 +584,6 @@ def run():
             else:
                 st.error('Something went wrong..')                
 
-
-   
-    
-
-    
-   
-
-
-
     ###### CODE FOR ADMIN SIDE (ADMIN) ######
     else:
         st.success('Welcome to Admin Side')
