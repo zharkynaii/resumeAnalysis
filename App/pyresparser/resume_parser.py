@@ -125,24 +125,16 @@ from . import utils
 
 class ResumeParser(object):
 
-    def __init__(
-        self,
-        resume,
-        skills_file=None,
-        custom_regex=None
-    ):
+    def __init__(self, resume, skills_file=None, custom_regex=None):
+        # Попытка загрузки модели spaCy с обработкой ошибок
         try:
-            nlp = spacy.load("./models/en_core_web_sm")
-        except OSError as e:
-            raise OSError(
-                "Модель 'en_core_web_sm' не найдена в ./models/en_core_web_sm. "
-                "Убедитесь, что она скопирована из Anaconda и доступна локально. "
-                f"Подробности: {str(e)}"
-            )
+            self.nlp = self._load_spacy_model()
+        except Exception as e:
+            raise RuntimeError(f"Failed to load spaCy model: {str(e)}")
 
         self.__skills_file = skills_file
         self.__custom_regex = custom_regex
-        self.__matcher = Matcher(nlp.vocab)
+        self.__matcher = Matcher(self.nlp.vocab)
         self.__details = {
             'name': None,
             'email': None,
@@ -152,16 +144,76 @@ class ResumeParser(object):
             'no_of_pages': None,
         }
         self.__resume = resume
-        if not isinstance(self.__resume, io.BytesIO):
-            ext = os.path.splitext(self.__resume)[1].split('.')[1]
-        else:
-            ext = self.__resume.name.split('.')[1]
-        self.__text_raw = utils.extract_text(self.__resume, '.' + ext)
+        ext = self._get_file_extension()
+        
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.__text_raw = utils.extract_text(self.__resume, '.' + ext)
+            
         self.__text = ' '.join(self.__text_raw.split())
-        self.__nlp = nlp(self.__text)
-        self.__custom_nlp = nlp(self.__text_raw)
+        self.__nlp = self.nlp(self.__text)
+        self.__custom_nlp = self.nlp(self.__text_raw)
         self.__noun_chunks = list(self.__nlp.noun_chunks)
         self.__get_basic_details()
+
+    def _load_spacy_model(self):
+        """Загружает модель spaCy с несколькими попытками"""
+        try:
+            return spacy.load('en_core_web_sm')
+        except OSError:
+            try:
+                import en_core_web_sm
+                return en_core_web_sm.load()
+            except ImportError:
+                raise OSError(
+                    "Модель 'en_core_web_sm' не найдена. Установите её командой: "
+                    "python -m spacy download en_core_web_sm"
+                )
+
+    def _get_file_extension(self):
+        if not isinstance(self.__resume, io.BytesIO):
+            return os.path.splitext(self.__resume)[1].split('.')[1]
+        return self.__resume.name.split('.')[1]
+    
+
+    # def __init__(
+    #     self,
+    #     resume,
+    #     skills_file=None,
+    #     custom_regex=None
+    # ):
+    #     try:
+    #         nlp = spacy.load(os.path.join(os.path.dirname(__file__), "App/models/en_core_web_sm"))
+    #         # nlp = spacy.load("./models/en_core_web_sm")
+    #     except OSError as e:
+    #         raise OSError(
+    #             "Модель 'en_core_web_sm' не найдена в ./models/en_core_web_sm. "
+    #             "Убедитесь, что она скопирована из Anaconda и доступна локально. "
+    #             f"Подробности: {str(e)}"
+    #         )
+
+    #     self.__skills_file = skills_file
+    #     self.__custom_regex = custom_regex
+    #     self.__matcher = Matcher(nlp.vocab)
+    #     self.__details = {
+    #         'name': None,
+    #         'email': None,
+    #         'mobile_number': None,
+    #         'skills': None,
+    #         'degree': None,
+    #         'no_of_pages': None,
+    #     }
+    #     self.__resume = resume
+    #     if not isinstance(self.__resume, io.BytesIO):
+    #         ext = os.path.splitext(self.__resume)[1].split('.')[1]
+    #     else:
+    #         ext = self.__resume.name.split('.')[1]
+    #     self.__text_raw = utils.extract_text(self.__resume, '.' + ext)
+    #     self.__text = ' '.join(self.__text_raw.split())
+    #     self.__nlp = nlp(self.__text)
+    #     self.__custom_nlp = nlp(self.__text_raw)
+    #     self.__noun_chunks = list(self.__nlp.noun_chunks)
+    #     self.__get_basic_details()
 
     def get_extracted_data(self):
         return self.__details
