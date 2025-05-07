@@ -24,9 +24,18 @@ from streamlit_tags import st_tags
 from PIL import Image
 # pre stored data for prediction purposes
 from Courses import ds_course,web_course,android_course,ios_course,uiux_course,resume_videos,interview_videos
+# import nltk
+# nltk.download('stopwords')
+# nltk.download('punkt')
+
 import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+
+# Попробуйте загрузить ресурс stopwords
+try:
+    nltk.download('stopwords')
+    st.success("Ресурс 'stopwords' успешно загружен!")
+except Exception as e:
+    st.error(f"Ошибка загрузки ресурса: {e}")
 
 
 ###### Preprocessing functions ######
