@@ -99,7 +99,7 @@
 # zipp==3.8.1
 streamlit==1.12.2
 nltk==3.7
-spacy==2.3.5
+spacy==3.6.1
 pdfminer.six==20220524
 docx2txt==0.8
 pandas==1.4.4
