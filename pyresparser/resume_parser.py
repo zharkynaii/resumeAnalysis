@@ -19,7 +19,7 @@ class ResumeParser(object):
             nlp = spacy.load("en_core_web_sm")
         except OSError:
             download("en_core_web_sm")
-            nlp = spacy.load("en_core_web_sm")
+            nlp = spacy.load("models/en_core_web_sm")
         # nlp = spacy.load('en_core_web_sm')
         # custom_nlp = spacy.load(os.path.dirname(os.path.abspath(__file__)))
         self.__skills_file = skills_file
