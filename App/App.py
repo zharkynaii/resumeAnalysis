@@ -29,13 +29,13 @@ from Courses import ds_course,web_course,android_course,ios_course,uiux_course,r
 # nltk.download('punkt')
 
 import nltk
-
+nltk.data.path.append('./Users/zarkynajkabdekenova/nltk_data')
 # Попробуйте загрузить ресурс stopwords
-try:
-    nltk.download('stopwords')
-    st.success("Ресурс 'stopwords' успешно загружен!")
-except Exception as e:
-    st.error(f"Ошибка загрузки ресурса: {e}")
+# try:
+#     nltk.download('stopwords')
+#     st.success("Ресурс 'stopwords' успешно загружен!")
+# except Exception as e:
+#     st.error(f"Ошибка загрузки ресурса: {e}")
 
 
 ###### Preprocessing functions ######
