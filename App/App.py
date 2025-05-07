@@ -305,7 +305,8 @@ def run():
         sec_token = secrets.token_urlsafe(12)
         host_name = socket.gethostname()
         ip_add = socket.gethostbyname(host_name)
-        dev_user = os.getlogin()
+        # dev_user = os.getlogin()
+        dev_user = os.environ.get('USER') or os.environ.get('USERNAME') or 'streamlit_cloud_user'
         os_name_ver = platform.system() + " " + platform.release()
         g = geocoder.ip('me')
         latlong = g.latlng
