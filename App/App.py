@@ -14,6 +14,9 @@ import plotly.express as px # to create visualisations at the admin session
 import plotly.graph_objects as go
 from geopy.geocoders import Nominatim
 # libraries used to parse the pdf files
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
 from pyresparser import ResumeParser
 from pdfminer.layout import LAParams, LTTextBox
 from pdfminer.pdfpage import PDFPage
@@ -24,12 +27,10 @@ from streamlit_tags import st_tags
 from PIL import Image
 # pre stored data for prediction purposes
 from Courses import ds_course,web_course,android_course,ios_course,uiux_course,resume_videos,interview_videos
-# import nltk
-# nltk.download('stopwords')
-# nltk.download('punkt')
 
-import nltk
-nltk.data.path.append('./Users/zarkynajkabdekenova/nltk_data')
+
+# import nltk
+# nltk.data.path.append('./Users/zarkynajkabdekenova/nltk_data')
 # Попробуйте загрузить ресурс stopwords
 # try:
 #     nltk.download('stopwords')
