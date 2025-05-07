@@ -98,11 +98,12 @@
 # watchdog==2.1.9
 # zipp==3.8.1
 streamlit==1.12.2
-spacy==2.3.5
 nltk==3.7
+spacy==2.3.5
 pdfminer.six==20220524
 docx2txt==0.8
 pandas==1.4.4
 numpy==1.23.2
 PyMySQL==1.0.2
 requests==2.28.1
+
