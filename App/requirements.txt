@@ -174,7 +174,7 @@ pydantic==1.9.2
 pydeck==0.8.0b1
 Pygments==2.13.0
 Pympler==1.0.1
-sqlite3 
+# sqlite3 
 # PyMySQL==1.0.2
 pyparsing==3.0.9
 pyresparser==1.0.6
