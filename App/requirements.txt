@@ -98,7 +98,7 @@ pyresparser==1.0.6
 # watchdog==2.1.9
 # zipp==3.8.1
 # streamlit==1.12.2
-# nltk==3.7
+nltk==3.7
 # spacy==3.6.1
 # pdfminer.six==20220524
 # docx2txt==0.8
