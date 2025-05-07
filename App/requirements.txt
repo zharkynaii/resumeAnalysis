@@ -1,5 +1,5 @@
 # --no-build-isolation
-azltair==4.2.0
+altair==4.2.0
 attrs==22.1.0
 blinker==1.5
 blis==0.7.8
