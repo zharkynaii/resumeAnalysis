@@ -3,7 +3,7 @@ import streamlit as st # core package used in this project
 import pandas as pd
 import base64, random
 import time,datetime
-import pymysql
+# import pymysql
 import os
 import socket
 import platform 
