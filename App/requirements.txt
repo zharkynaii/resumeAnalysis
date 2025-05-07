@@ -104,7 +104,7 @@
 # docx2txt==0.8
 # pandas==1.4.4
 # numpy==1.23.2
-# PyMySQL==1.0.2
+PyMySQL==1.0.2
 # requests==2.28.1
 
 spacy==3.6.1
